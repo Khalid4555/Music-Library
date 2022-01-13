@@ -62,7 +62,30 @@ exports.update = async (req, res) => {
     if (!affectedRows) {
       res.sendStatus(404);
     } else {
-      res.status(200).send();
+      res.status(200).send('updated');
+    }
+  } catch (err) {
+    res.sendStatus(500);
+  }
+
+  db.close();
+};
+
+exports.deleteById = async (req, res) => {
+  const db = await getDb();
+  const data = req.body;
+  const { artistId } = req.params;
+
+  try {
+    const [{ affectedRows }] = await db.query(
+      'DELETE FROM Artist WHERE id = ?',
+      [artistId]
+    );
+
+    if (!affectedRows) {
+      res.sendStatus(404);
+    } else {
+      res.status(200).send('deleted');
     }
   } catch (err) {
     res.sendStatus(500);
